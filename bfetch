@@ -22,11 +22,11 @@ DARK=$(echo -en '\033[01;30m')
 
 OS=`grep ^NAME /etc/os-release | sed 's/\"//g' | sed 's/.*=//g'`
 KERNEL=`uname -r`
-RAM=$(echo "$((`grep MemTotal /proc/meminfo | awk '{print $2}'`/1024))")
-RAM_USED=$(echo $((`grep MemAvailable /proc/meminfo | awk '{print $2}'`/1024)))
+RAM=$(echo "$((`awk '/MemTotal/{print $2}' /proc/meminfo`/1024))")
+RAM_USED=$(echo $((`awk '/MemAvailable/{print $2}' /proc/meminfo`/1024)))
 RAM_USED=$(echo $((RAM-RAM_USED)))
 UPTIME=`echo $(uptime | awk '{print $3}' | sed 's/,//g' | sed 's/\:/h /g')m`
-HOSTNAME=`hostnamectl | head -n 1 | awk '{print $3}'`
+HOSTNAME=`hostnamectl | awk 'NR==1{print $3}'`
 USERNAME=`whoami`
 
 echo -e "${BLUE}┏━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓"
